@@ -9,17 +9,21 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    cell.cpp \
     chip.cpp \
-    cube.cpp \
+    dice.cpp \
+    game.cpp \
     main.cpp \
-    MainWidget.cpp \
-    moveindicator.cpp
+    MainWidget.cpp
 
 HEADERS += \
     MainWidget.h \
+    cell.h \
     chip.h \
-    cube.h \
-    moveindicator.h
+    dice.h \
+    enums.h \
+    game.h \
+    sizes.h
 
 FORMS += \
     MainWidget.ui

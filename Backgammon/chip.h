@@ -7,39 +7,51 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 
-#include <moveindicator.h>
-#include <cube.h>
+#include "dice.h"
+#include "cell.h"
+#include "enums.h"
 
-class Cube;
+class MoveIndicator;
+class Dice;
+class Cell;
 
-class Chip : public QObject, public QGraphicsItem
+class Chip
 {
-    Q_OBJECT
+//    Q_OBJECT
 public:
-    explicit Chip(QObject *parent = 0);
-    explicit Chip(QString c, QObject *parent = 0);
+ //   explicit Chip(QObject *parent = 0);
+    explicit Chip(ChipColor c);
     ~Chip();
 
-    void setCube1(Cube* c) { cube1 = c; }
-    void setCube2(Cube* c) { cube2 = c; }
+    void setCube1(Dice* c) { cube1 = c; }
+    void setCube2(Dice* c) { cube2 = c; }
 
-    std::vector<std::pair<int, int>> calculatePossibleMoves();
+//    static Chip* selectedChip;
 
-    static Chip* selectedChip;
+//    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+//    void drawChip(QPainter *painter);
+//    QRectF boundingRect() const;
+//    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    void drawChip(QPainter *painter);
-    QRectF boundingRect() const;
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    ChipColor getColor(){ return color; }
 
-    QString getColor(){ return color; }
+//    bool selected = false;
 
-    bool selected = false;
+    std::vector<Cell*> calculateMoves();
+    Cell* getCellInDirection(Chip* chip, int steps);
+    Cell* getCurrentCell() const;
+    void setCurrentCell(Cell* cell);
+    void setMoveIndicator(MoveIndicator* moves);
 
 private:
-    Cube* cube1;
-    Cube* cube2;
+    MoveIndicator* moveIndicator;
 
-    QString color;
+    Dice* cube1;
+    Dice* cube2;
+
+    Cell* currentCell;
+
+    ChipColor color;
+    //bool isWhite;
 };
 #endif // CHIP_H
