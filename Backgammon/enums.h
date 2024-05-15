@@ -7,4 +7,10 @@ enum ChipColor {
     white
 };
 
+enum MoveType {
+    moveForbidden,
+    regularMove,
+    removeFromBoard
+};
+
 #endif // ENUMS_H

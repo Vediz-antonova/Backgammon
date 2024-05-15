@@ -23,6 +23,13 @@ public:
     void setValue(int new_value);
     int getValue();
 
+    void setEnabled(bool value);
+    bool getEnabled();
+
+/*
+    void setPlayed(bool value);
+    bool getPlayed();
+*/
     void setCallbackFunc(void (*func) ());
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
@@ -35,10 +42,10 @@ public:
 
 protected:
     int diceValue;
-//    Dice *otherCube;
-
-private:
+    bool enabled;
+//    bool played;
     void (*callbackFunc)() = 0;
+//    Dice *otherCube;
 
 signals:
 

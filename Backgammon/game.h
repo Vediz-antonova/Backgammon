@@ -1,9 +1,12 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <algorithm>
+
 #include "cell.h"
 #include "chip.h"
 #include "dice.h"
+#include "removechipbutton.h"
 
 class Game {
 public:
@@ -14,28 +17,30 @@ public:
 
     Game();
     ~Game();
-    std::vector<Cell*> board;
 
     void setScene(QGraphicsScene* new_sc) { scene = new_sc; }
     void startNewGame();
     void endGame();
-    void makeMove(Chip* chip, Cell* cell);
-    void rollDices();
-    int rollDice(Dice *dice);
-    void tryMakeMove(Cell *from, Cell *to);
-    void selectCell(Cell *cell);
-    void unselectCell();
 
 private:
     QGraphicsScene* scene;
 
-    Dice *dice1;
-    Dice *dice2;
+    Cell board[24];
 
-    std::vector<Chip*> chip_black;
-    std::vector<Chip*> chip_white;
+    Dice dice1;
+    Dice dice2;
 
-    MoveIndicator *moveIndicator;
+    RemoveChipButton removeBlackButton;
+    RemoveChipButton removeWhiteButton;
+
+//    std::vector<Chip*> black_chips;
+//    std::vector<Chip*> white_chips;
+    std::vector<int> availableMovements;
+
+    int removed_black_chips;
+    int removed_white_ships;
+
+    //MoveIndicator *moveIndicator;
     // std::vector<Player> players;
 
     Cell *selectedCell;
@@ -45,6 +50,18 @@ private:
     static void cellClicked(int id);
     static void diceClicked();
 
+    void rollDices();
+    int rollDice(Dice &dice);
+    void tryMakeMove(Cell &from, Cell &to);
+    void selectCell(Cell &cell);
+    void unselectCell();
+    std::vector<int> getDicesMovements();
+    bool validateMovement(int movement);
+    void clearMovementsMarks();
+    int getCellsDistance(Cell &from, Cell &to);
+    MoveType getMoveType(Cell &from, int move);
+    int getCellIdAfterMove(Cell &from, int move);
+    bool chipsRemoveAvailable();
 };
 
 

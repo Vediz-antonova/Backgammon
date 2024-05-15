@@ -10,19 +10,19 @@ CONFIG += c++17
 
 SOURCES += \
     cell.cpp \
-    chip.cpp \
     dice.cpp \
     game.cpp \
     main.cpp \
-    MainWidget.cpp
+    MainWidget.cpp \
+    removechipbutton.cpp
 
 HEADERS += \
     MainWidget.h \
     cell.h \
-    chip.h \
     dice.h \
     enums.h \
     game.h \
+    removechipbutton.h \
     sizes.h
 
 FORMS += \

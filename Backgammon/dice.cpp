@@ -4,6 +4,7 @@
 Dice::Dice(QObject *parent) : QObject(parent), QGraphicsItem()
 {
     setValue(1);
+    setEnabled(true);
 }
 
 Dice::~Dice(){}
@@ -17,6 +18,25 @@ void Dice::setValue(int new_value) {
 
 int Dice::getValue() { return diceValue; }
 
+void Dice::setEnabled(bool value) {
+    enabled = value;
+    update();
+}
+
+bool Dice::getEnabled() {
+    return enabled;
+}
+
+/*
+void Dice::setPlayed(bool value) {
+    played = value;
+    update();
+}
+
+bool Dice::getPlayed() {
+    return played;
+}
+*/
 
 void Dice::setCallbackFunc(void (*func) ()) {
     callbackFunc = func;
@@ -27,9 +47,12 @@ void Dice::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
-    painter->setBrush(Qt::white);
+    painter->setBrush(enabled ? Qt::white : Qt::gray);
+
+    painter->setPen(Qt::black);
     painter->drawRect(0, 0, DICE_SIZE, DICE_SIZE);
 
+    painter->setPen(Qt::black);
     painter->setBrush(Qt::black);
     if (getValue() == 1 || getValue() == 3 || getValue() == 5) {
         painter->drawEllipse(QPointF(DICE_SIZE/2, DICE_SIZE/2), DICE_DOT_SIZE, DICE_DOT_SIZE); // центральная точка
@@ -68,9 +91,11 @@ void Dice::setOtherCube(Dice *cube) {
 void Dice::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event);
-    if (callbackFunc) {
+
+    if (enabled && callbackFunc) {
         callbackFunc();
     }
+
 /*
     if (event->button() == Qt::LeftButton) {
         Game();

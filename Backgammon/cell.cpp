@@ -1,21 +1,35 @@
 #include "cell.h"
 #include "sizes.h"
 
-Cell::Cell(int id, int x, int y) : id(id), x(x), y(y), chips(0) {}
+//Cell::Cell(int id/*, int x, int y*/) : id(id), /*x(x), y(y),*/ chips(0) {}
 
-Cell::~Cell(){}
+Cell::Cell() {
+    chipsColor = none;
+    chipsCount = 0;
+    selected = false;
+    availableToMove = false;
+}
+// : chipsColor(none), chipsCount(0), selected(false), availableToMove(false) {}
+
+Cell::~Cell() {}
 
 int Cell::getId() const { return id; }
 
-int Cell::getX() const { return x; }
+void Cell::setId(int value) { id = value; }
 
-int Cell::getY() const { return y; }
+//int Cell::getX() const { return x; }
+
+//int Cell::getY() const { return y; }
 
 bool Cell::getSelected() const { return selected; }
 
 void Cell::setSelected(bool value) {
     selected = value;
     update();
+}
+
+bool Cell::getAvailableToMove() {
+    return availableToMove;
 }
 
 void Cell::setAvailableToMove(bool value) {
@@ -25,34 +39,45 @@ void Cell::setAvailableToMove(bool value) {
     }
 }
 
-void Cell::addChip(Chip* ch) {
+bool Cell::addChip(ChipColor color) {
 //    int chipY = y + (isTopRow() ? getChipsCount() * 25 : -getChipsCount() * 25);
 //    ch->setPos(x, chipY);
-    chips.push_back(ch);
-    update();
-}
-
-Chip* Cell::removeChip() {
-    if (getChipsCount() > 0) {
-        Chip *chip = chips.back();
-        chips.pop_back();
-        update();
-        return chip;
+    if (chipsColor != none && chipsColor != color) {
+        return false;
     }
 
-    return nullptr;
+    if (chipsCount >= 15) {
+        return false;
+    }
+
+    chipsColor = color;
+    chipsCount += 1;
+    update();
+
+    return true;
+}
+
+bool Cell::removeChip() {
+    if (getChipsCount() > 0) {
+        chipsCount -= 1;
+
+        if (chipsCount == 0) {
+            chipsColor = none;
+        }
+
+        update();
+        return true;
+    }
+
+    return false;
 }
 
 int Cell::getChipsCount() const {
-    return chips.size();
+    return chipsCount;
 }
 
 ChipColor Cell::getChipsColor() const {
-    if (getChipsCount() == 0) {
-        return none;
-    }
-
-    return chips[0]->getColor();
+    return chipsColor;
 }
 
 void Cell::setCallbackFunc(void (*func) (int id)) {
@@ -63,7 +88,6 @@ void Cell::setCallbackFunc(void (*func) (int id)) {
 std::pair<int, int> Cell::getChipPosition(bool isBlack) const {
     return std::make_pair(x, y + (isBlack ? -getChipsCount() * 25 : getChipsCount() * 25));
 }
-*/
 
 bool Cell::canMoveTo(Chip* ch) {
     if(getChipsCount() >= 1 && ch->getColor() != chips[getChipsCount() - 1]->getColor()){
@@ -81,15 +105,17 @@ bool Cell::containsChip(Chip* chip) const {
     }
     return false;
 }
+*/
 
 void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
-    for (std::vector<Chip*>::size_type i = 0; i < chips.size(); i++) {
-        Chip* chip = chips[i];
+//    painter->setPen(Qt::white);
+//    painter->drawRect(boundingRect());
 
-        drawChip(painter, i, chip);
+    for (int i = 0; i < chipsCount; i++) {
+        drawChip(painter, i);
     }
 
     drawAvailableMark(painter);
@@ -107,9 +133,9 @@ void Cell::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     }
 }
 
-void Cell::drawChip(QPainter *painter, int pos, Chip* chip) {
-    Qt::GlobalColor color = chip->getColor() == white ? Qt::white : Qt::black;
-    Qt::GlobalColor borderColor = chip->getColor() == white ? Qt::black : Qt::white;
+void Cell::drawChip(QPainter *painter, int pos) {
+    Qt::GlobalColor color = chipsColor == white ? Qt::white : Qt::black;
+    Qt::GlobalColor borderColor = chipsColor == white ? Qt::black : Qt::white;
 
     int chipYOffset = pos * CHIP_SHIFT;
     int chipY;

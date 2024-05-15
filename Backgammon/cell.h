@@ -1,6 +1,12 @@
 #ifndef CELL_H
 #define CELL_H
 
+#include <QObject>
+#include <QGraphicsItem>
+#include <QPainter>
+#include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
+
 #include <utility>
 #include "chip.h"
 #include "enums.h"
@@ -10,19 +16,21 @@ class Chip;
 class Cell : public QObject, public QGraphicsItem {
     Q_OBJECT
 public:
-    //explicit Cell(){}
-    Cell(int id, int x, int y);
+    Cell();
+//    Cell(int id/*, int x, int y*/);
     ~Cell();
 
     int getId() const;
-    int getX() const;
-    int getY() const;
+    void setId(int value);
+//    int getX() const;
+//    int getY() const;
     bool getSelected() const;
     void setSelected(bool value);
+    bool getAvailableToMove();
     void setAvailableToMove(bool value);
 
-    void addChip(Chip* ch);
-    Chip* removeChip();
+    bool addChip(ChipColor color);
+    bool removeChip();
     int getChipsCount() const;
     ChipColor getChipsColor() const;
 
@@ -37,14 +45,15 @@ public:
 
 private:
     int id;
-    int x;
-    int y;
-    bool selected = false;
-    bool availableToMove = false;
-    std::vector<Chip*> chips;
+//    int x;
+//    int y;
+    ChipColor chipsColor;
+    bool selected;
+    bool availableToMove;
+    int chipsCount;
     void (*callbackFunc)(int id) = 0;
     bool isTopRow();
-    void drawChip(QPainter *painter, int pos, Chip* chip);
+    void drawChip(QPainter *painter, int pos);
     void drawAvailableMark(QPainter *painter);
     //std::pair<int, int> getChipPosition(bool isBlack) const;
 };
