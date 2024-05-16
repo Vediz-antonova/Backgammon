@@ -61,10 +61,7 @@ void Game::startNewGame() {
         board[12].addChip(black);
     }
 
-    for (int i = 13; i < 23; i++) {
-        board[i].addChip(white);
-    }
-    for (int i = 0; i < 7; i++){
+    for (int i = 0; i < num_chips; i++) {
         board[0].addChip(white);
     }
 }
@@ -100,6 +97,7 @@ void Game::diceClicked() {
     Game *game = &Game::getInstance();
 
     game->rollDices();
+    game->endOfMovements();
 }
 
 void Game::removeButtonClicked(int move){
@@ -166,6 +164,8 @@ void Game::tryMakeMove(Cell &from, Cell &to)
     if (movePos != availableMovements.end()) {
         availableMovements.erase(movePos);
     }
+
+    endOfMovements();
 }
 
 void Game::selectCell(Cell &cell) {
@@ -244,9 +244,11 @@ bool Game::validateMovement(int movement) {
     bool removeAvailable = chipsRemoveAvailable();
 
     for (Cell &cell : board) {
-        MoveType moveType = getMoveType(cell, movement);
-        if (moveType == regularMove || (moveType == removeFromBoard && removeAvailable)) {
-            return true;
+        if(cell.getChipsColor() == playerColor){
+            MoveType moveType = getMoveType(cell, movement);
+            if (moveType == regularMove || (moveType == removeFromBoard && removeAvailable)) {
+                return true;
+            }
         }
     }
 
@@ -281,10 +283,6 @@ MoveType Game::getMoveType(Cell &from, int move) {
 
     ChipColor toCellColor = board[toCellId].getChipsColor();
     if (toCellColor != none && toCellColor != fromCellColor) {
-        return moveForbidden;
-    }
-
-    if(isCellHead(from) && fromHead){
         return moveForbidden;
     }
 
@@ -328,6 +326,8 @@ void Game::removeChipFromBoard(Cell &cell, int move){
     if (movePos != availableMovements.end()) {
         availableMovements.erase(movePos);
     }
+
+    endOfMovements();
 }
 
 void Game::endOfMovements(){
