@@ -1,25 +1,18 @@
 #include "cell.h"
 #include "sizes.h"
 
-//Cell::Cell(int id/*, int x, int y*/) : id(id), /*x(x), y(y),*/ chips(0) {}
-
 Cell::Cell() {
     chipsColor = none;
     chipsCount = 0;
     selected = false;
     availableToMove = false;
 }
-// : chipsColor(none), chipsCount(0), selected(false), availableToMove(false) {}
 
 Cell::~Cell() {}
 
 int Cell::getId() const { return id; }
 
 void Cell::setId(int value) { id = value; }
-
-//int Cell::getX() const { return x; }
-
-//int Cell::getY() const { return y; }
 
 bool Cell::getSelected() const { return selected; }
 
@@ -40,8 +33,6 @@ void Cell::setAvailableToMove(bool value) {
 }
 
 bool Cell::addChip(ChipColor color) {
-//    int chipY = y + (isTopRow() ? getChipsCount() * 25 : -getChipsCount() * 25);
-//    ch->setPos(x, chipY);
     if (chipsColor != none && chipsColor != color) {
         return false;
     }
@@ -83,29 +74,6 @@ ChipColor Cell::getChipsColor() const {
 void Cell::setCallbackFunc(void (*func) (int id)) {
     callbackFunc = func;
 }
-
-/*
-std::pair<int, int> Cell::getChipPosition(bool isBlack) const {
-    return std::make_pair(x, y + (isBlack ? -getChipsCount() * 25 : getChipsCount() * 25));
-}
-
-bool Cell::canMoveTo(Chip* ch) {
-    if(getChipsCount() >= 1 && ch->getColor() != chips[getChipsCount() - 1]->getColor()){
-        return false;
-    }
-
-    return true;
-}
-
-bool Cell::containsChip(Chip* chip) const {
-    for (Chip* c : chips) {
-        if (c == chip) {
-            return true;
-        }
-    }
-    return false;
-}
-*/
 
 void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     Q_UNUSED(option);

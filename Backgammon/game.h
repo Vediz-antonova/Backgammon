@@ -4,7 +4,6 @@
 #include <algorithm>
 
 #include "cell.h"
-#include "chip.h"
 #include "dice.h"
 #include "removechipbutton.h"
 
@@ -33,22 +32,20 @@ private:
     RemoveChipButton removeBlackButton;
     RemoveChipButton removeWhiteButton;
 
-//    std::vector<Chip*> black_chips;
-//    std::vector<Chip*> white_chips;
     std::vector<int> availableMovements;
 
     int removed_black_chips;
-    int removed_white_ships;
-
-    //MoveIndicator *moveIndicator;
-    // std::vector<Player> players;
+    int removed_white_chips;
 
     Cell *selectedCell;
 
     ChipColor playerColor = white;
 
+    bool fromHead = false;
+
     static void cellClicked(int id);
     static void diceClicked();
+    static void removeButtonClicked(int move);
 
     void rollDices();
     int rollDice(Dice &dice);
@@ -62,6 +59,9 @@ private:
     MoveType getMoveType(Cell &from, int move);
     int getCellIdAfterMove(Cell &from, int move);
     bool chipsRemoveAvailable();
+    void removeChipFromBoard(Cell &cell, int move);
+    void endOfMovements();
+    bool isCellHead(Cell &cell);
 };
 
 

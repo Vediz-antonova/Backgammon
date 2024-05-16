@@ -8,22 +8,16 @@
 #include <QGraphicsSceneMouseEvent>
 
 #include <utility>
-#include "chip.h"
 #include "enums.h"
-
-class Chip;
 
 class Cell : public QObject, public QGraphicsItem {
     Q_OBJECT
 public:
     Cell();
-//    Cell(int id/*, int x, int y*/);
     ~Cell();
 
     int getId() const;
     void setId(int value);
-//    int getX() const;
-//    int getY() const;
     bool getSelected() const;
     void setSelected(bool value);
     bool getAvailableToMove();
@@ -36,17 +30,12 @@ public:
 
     void setCallbackFunc(void (*func) (int id));
 
-    bool canMoveTo(Chip* ch);
-    bool containsChip(Chip* chip) const;
-
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QRectF boundingRect() const;
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 private:
     int id;
-//    int x;
-//    int y;
     ChipColor chipsColor;
     bool selected;
     bool availableToMove;
@@ -55,7 +44,6 @@ private:
     bool isTopRow();
     void drawChip(QPainter *painter, int pos);
     void drawAvailableMark(QPainter *painter);
-    //std::pair<int, int> getChipPosition(bool isBlack) const;
 };
 
 #endif // CELL_H

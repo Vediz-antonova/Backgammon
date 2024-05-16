@@ -82,12 +82,6 @@ void Dice::Game()
     update();
 }
 
-/*
-void Dice::setOtherCube(Dice *cube) {
-    otherCube = cube;
-}
-*/
-
 void Dice::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_UNUSED(event);
@@ -95,35 +89,4 @@ void Dice::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if (enabled && callbackFunc) {
         callbackFunc();
     }
-
-/*
-    if (event->button() == Qt::LeftButton) {
-        Game();
-        if (otherCube) {
-            otherCube->Game();
-        }
-
-        isWhiteTurn = !isWhiteTurn;
-
-        if (Chip::selectedChip) {
-            Chip::selectedChip->selected = false;
-//            Chip::selectedChip->update();
-            Chip::selectedChip = nullptr;
-        }
-    }
-*/
 }
-
-/*
-void Dice::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_UNUSED(event); // Для игнорировния события
-}
-
-QPainterPath Dice::shape() const // Для установки ограничивающего прямоугольника
-{
-    QPainterPath path;
-    path.addRect(QRectF(0, 0, DICE_SIZE, DICE_SIZE));
-    return path;
-}
-*/

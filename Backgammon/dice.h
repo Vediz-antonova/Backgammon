@@ -9,8 +9,6 @@
 #include <QRandomGenerator>
 #include <QGraphicsSceneMouseEvent>
 
-#include "chip.h"
-
 class Dice : public QObject, public QGraphicsItem{
     Q_OBJECT
 
@@ -35,22 +33,15 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     QRectF boundingRect() const override;
 
-//    void setOtherCube(Dice *cube);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
-//    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-//    QPainterPath shape() const;
+
+    void Game();
 
 protected:
     int diceValue;
     bool enabled;
 //    bool played;
     void (*callbackFunc)() = 0;
-//    Dice *otherCube;
-
-signals:
-
-public slots:
-    void Game();
 };
 
 #endif // DICE_H

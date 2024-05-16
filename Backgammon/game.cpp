@@ -3,30 +3,16 @@
 
 Game::Game() {
     selectedCell = nullptr;
-//    dice1 = new Dice();
-//    dice2 = new Dice();
     dice1.setCallbackFunc(diceClicked);
     dice2.setCallbackFunc(diceClicked);
 
     removeBlackButton.setColor(black);
     removeWhiteButton.setColor(white);
-//    dice1->setOtherCube(dice2);
-//    dice2->setOtherCube(dice1);
-
-//    moveIndicator = new MoveIndicator();
 }
 
-Game::~Game() {
-    //delete dice1;
-    //delete dice2;
-
-//    for (Cell *cell : board) {
-//        delete cell;
-//    }
-}
+Game::~Game() {}
 
 void Game::startNewGame() {
-//    scene->addItem(moveIndicator);
     scene->addItem(&dice1);
     scene->addItem(&dice2);
     dice1.setPos((scene->width() - DICE_SIZE)/2, scene->height()/2 - 110);
@@ -36,8 +22,12 @@ void Game::startNewGame() {
 
     scene->addItem(&removeBlackButton);
     scene->addItem(&removeWhiteButton);
-    removeBlackButton.setPos(10, 10);
-    removeWhiteButton.setPos(scene->width() - 120, scene->height() - 120);
+    removeBlackButton.setPos(40, (scene->height()-REMOVE_BUTTON_SIZE)/2);
+    removeWhiteButton.setPos(scene->width() - REMOVE_BUTTON_SIZE - 110, (scene->height()-REMOVE_BUTTON_SIZE)/2);
+    removeBlackButton.setCallbackFunc(removeButtonClicked);
+    removeWhiteButton.setCallbackFunc(removeButtonClicked);
+    removeBlackButton.hide();
+    removeWhiteButton.hide();
 
     int x;
     int y;
@@ -46,7 +36,7 @@ void Game::startNewGame() {
         if(i < 12){
             y = TOP_CELL_OFFSET;
         } else {
-            y = TOP_CELL_OFFSET + CELL_HEIGHT;
+            y = TOP_CELL_OFFSET + CELL_HEIGHT + 10;
         }
 
         if ((i > 5 && i < 12) || (i > 11 && i < 18)) {
@@ -56,7 +46,6 @@ void Game::startNewGame() {
         }
 
         int column = i < 12 ? 11 - i : i - 12;
-        //Cell* c = new Cell(i/*, x + column * (CELL_WIDTH + CELL_X_SPACE), y*/);
         Cell &c = board[i];
         c.setId(i);
         c.setCallbackFunc(cellClicked);
@@ -64,65 +53,31 @@ void Game::startNewGame() {
         scene->addItem(&c);
         c.setPos(x + column * (CELL_WIDTH + CELL_X_SPACE), y);
         c.show();
-        //board.push_back(c);
     }
 
     int num_chips = 15;
 
     for (int i = 0; i < num_chips; i++) {
         board[12].addChip(black);
-//        Chip* chip = new Chip(black);
-        //std::pair<int, int> pos = board[12]->getChipPosition(true);
-        //chip->setPos(pos.first, pos.second);
-//        scene->addItem(chip);
-//        chip->show();
-//        chip->setMoveIndicator(moveIndicator);
-//        black_chips.push_back(chip);
-
-//        chip->setCube1(&dice1);
-//        chip->setCube2(&dice2);
-//        board[12]->addChip(chip);
-//        chip->setCurrentCell((board[12]));
     }
 
-    for (int i = 0; i < num_chips; i++) {
+    for (int i = 13; i < 23; i++) {
+        board[i].addChip(white);
+    }
+    for (int i = 0; i < 7; i++){
         board[0].addChip(white);
-//        Chip* chip = new Chip(white);
-        //std::pair<int, int> pos = board[11]->getChipPosition(false);
-        //chip->setPos(pos.first, pos.second);
-//        scene->addItem(chip);
-//        chip->setMoveIndicator(moveIndicator);
-//        chip->show();
-//        white_chips.push_back(chip);
-
-//        chip->setCube1(dice1);
-//        chip->setCube2(dice2);
-//        board[0]->addChip(chip);
-//        chip->setCurrentCell((board[0]));
     }
 }
 
-void Game::endGame() {}
+void Game::endGame() {
+    if (removed_black_chips == 15 || removed_white_chips == 15){
 
-/* void Game::makeMove(Chip* chip, Cell* targetCell) {
-   if (!targetCell->canMoveTo(chip)) {
-        qDebug() << "Invalid move!";
-        return;
     }
-
-    Cell* currentCell = chip->getCurrentCell();
-    currentCell->removeChip();
-
-    targetCell->addChip(chip);
-    chip->setCurrentCell(targetCell);
-
 }
-*/
 
 void Game::cellClicked(int id) {
     Game *game = &Game::getInstance();
     Cell &cell = game->board[id];
-
 
     if (!game->selectedCell) {
         if (cell.getChipsColor() != game->playerColor) {
@@ -147,6 +102,17 @@ void Game::diceClicked() {
     game->rollDices();
 }
 
+void Game::removeButtonClicked(int move){
+    Game *game = &Game::getInstance();
+    Cell *cell = game->selectedCell;
+
+    if(cell == nullptr){
+        return;
+    }
+
+    game->removeChipFromBoard(*cell, move);
+}
+
 void Game::rollDices() {
     rollDice(dice1);
     rollDice(dice2);
@@ -160,8 +126,8 @@ void Game::rollDices() {
         }
     }
 
-    //dice1.setEnabled(false);
-    //dice2.setEnabled(false);
+    dice1.setEnabled(false);
+    dice2.setEnabled(false);
 }
 
 int Game::rollDice(Dice &dice) {
@@ -187,6 +153,10 @@ void Game::tryMakeMove(Cell &from, Cell &to)
         return;
     }
 
+    if(isCellHead(from)){
+        fromHead = true;
+    }
+
     to.addChip(chipColor);
 
     unselectCell();
@@ -203,9 +173,14 @@ void Game::selectCell(Cell &cell) {
         return;
     }
 
+    if(fromHead && isCellHead(cell)){
+        return;
+    }
+
     cell.setSelected(true);
     selectedCell = &cell;
-    int cellId = cell.getId();
+
+    std::vector<int> remove_moves;
 
     for (int move : availableMovements) {
         MoveType moveType = getMoveType(cell, move);
@@ -214,15 +189,26 @@ void Game::selectCell(Cell &cell) {
             int moveCellId = getCellIdAfterMove(cell, move);
             Cell &moveCell = board[moveCellId];
             moveCell.setAvailableToMove(true);
+            removeWhiteButton.setMove(0);
+            removeBlackButton.setMove(0);
         } else if (moveType == removeFromBoard && chipsRemoveAvailable()) {
             if (cell.getChipsColor() == white) {
                 removeWhiteButton.show();
             } else {
                 removeBlackButton.show();
             }
+            remove_moves.push_back(move);
         }
     }
-    // ToDo: add possible movements marks
+
+    if(!remove_moves.empty()){
+        int move = remove_moves[std::distance(remove_moves.begin(), std::min_element(remove_moves.begin(), remove_moves.end()))];
+        if (cell.getChipsColor() == white) {
+            removeWhiteButton.setMove(move);
+        } else {
+            removeBlackButton.setMove(move);
+        }
+    }
 }
 
 void Game::unselectCell() {
@@ -232,6 +218,9 @@ void Game::unselectCell() {
     }
 
     clearMovementsMarks();
+
+    removeBlackButton.hide();
+    removeWhiteButton.hide();
 }
 
 std::vector<int> Game::getDicesMovements() {
@@ -295,6 +284,10 @@ MoveType Game::getMoveType(Cell &from, int move) {
         return moveForbidden;
     }
 
+    if(isCellHead(from) && fromHead){
+        return moveForbidden;
+    }
+
     return regularMove;
 }
 
@@ -317,4 +310,50 @@ bool Game::chipsRemoveAvailable() {
     }
 
     return true;
+}
+
+void Game::removeChipFromBoard(Cell &cell, int move){
+    cell.removeChip();
+    ChipColor color = cell.getChipsColor();
+
+    if(color == white){
+        removed_white_chips++;
+    } else {
+        removed_black_chips++;
+    }
+
+    unselectCell();
+
+    std::vector<int>::iterator movePos = std::find(availableMovements.begin(), availableMovements.end(), move);
+    if (movePos != availableMovements.end()) {
+        availableMovements.erase(movePos);
+    }
+}
+
+void Game::endOfMovements(){
+    bool no_movements = true;
+    for(int move : availableMovements){
+        if(validateMovement(move)){
+            no_movements = false;
+        }
+    }
+
+    if(availableMovements.empty() || no_movements){
+        dice1.setEnabled(true);
+        dice2.setEnabled(true);
+
+        playerColor = playerColor == white ? black : white;
+        fromHead = false;
+    }
+}
+
+bool Game::isCellHead(Cell &cell){
+    ChipColor color = cell.getChipsColor();
+    if(cell.getId() == 0 && color == white){
+        return true;
+    } else if(cell.getId() == 12 && color == black){
+        return true;
+    }
+
+    return false;
 }

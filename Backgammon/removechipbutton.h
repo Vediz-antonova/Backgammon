@@ -14,14 +14,20 @@ public:
     explicit RemoveChipButton(QObject *parent = nullptr);
 
     void setColor(ChipColor color);
+    ChipColor getColor();
+    void setMove(int value);
+    int getMove();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QRectF boundingRect() const;
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
+    void setCallbackFunc(void (*func) (int move));
+
 private:
     ChipColor chipColor;
-signals:
+    void (*callbackFunc)(int move) = 0;
+    int move;
 };
 
 #endif // REMOVECHIPBUTTON_H
