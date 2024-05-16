@@ -1,5 +1,4 @@
 #include "removechipbutton.h"
-#include "sizes.h"
 
 RemoveChipButton::RemoveChipButton(QObject *parent)
     : QObject{parent}

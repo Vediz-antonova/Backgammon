@@ -1,5 +1,4 @@
 #include "game.h"
-#include "sizes.h"
 
 Game::Game() {
     selectedCell = nullptr;
@@ -8,6 +7,8 @@ Game::Game() {
 
     removeBlackButton.setColor(black);
     removeWhiteButton.setColor(white);
+
+    currentPlayer.setColor(playerColor);
 }
 
 Game::~Game() {}
@@ -28,6 +29,10 @@ void Game::startNewGame() {
     removeWhiteButton.setCallbackFunc(removeButtonClicked);
     removeBlackButton.hide();
     removeWhiteButton.hide();
+
+    scene->addItem(&currentPlayer);
+    currentPlayer.setPos(40, 50);
+    currentPlayer.show();
 
     int x;
     int y;
@@ -58,17 +63,26 @@ void Game::startNewGame() {
     int num_chips = 15;
 
     for (int i = 0; i < num_chips; i++) {
-        board[12].addChip(black);
+        board[6].addChip(black);
     }
 
     for (int i = 0; i < num_chips; i++) {
-        board[0].addChip(white);
+        board[18].addChip(white);
     }
 }
 
 void Game::endGame() {
     if (removed_black_chips == 15 || removed_white_chips == 15){
+        QMessageBox message;
+        if(removed_black_chips == 15){
+            message.setText("Winer: black");
+        } else {
+            message.setText("Winer: white");
+        }
 
+        message.exec();
+
+        scene->clear();
     }
 }
 
@@ -310,8 +324,7 @@ bool Game::chipsRemoveAvailable() {
     return true;
 }
 
-void Game::removeChipFromBoard(Cell &cell, int move){
-    cell.removeChip();
+void Game::removeChipFromBoard(Cell &cell, int move){\
     ChipColor color = cell.getChipsColor();
 
     if(color == white){
@@ -320,6 +333,7 @@ void Game::removeChipFromBoard(Cell &cell, int move){
         removed_black_chips++;
     }
 
+    cell.removeChip();
     unselectCell();
 
     std::vector<int>::iterator movePos = std::find(availableMovements.begin(), availableMovements.end(), move);
@@ -327,6 +341,7 @@ void Game::removeChipFromBoard(Cell &cell, int move){
         availableMovements.erase(movePos);
     }
 
+    endGame();
     endOfMovements();
 }
 
@@ -343,6 +358,7 @@ void Game::endOfMovements(){
         dice2.setEnabled(true);
 
         playerColor = playerColor == white ? black : white;
+        currentPlayer.setColor(playerColor);
         fromHead = false;
     }
 }

@@ -2,10 +2,15 @@
 #define GAME_H
 
 #include <algorithm>
+#include <QMessageBox>
 
 #include "cell.h"
 #include "dice.h"
 #include "removechipbutton.h"
+#include "currentplayer.h"
+
+#include "sizes.h"
+#include "enums.h"
 
 class Game {
 public:
@@ -31,6 +36,8 @@ private:
 
     RemoveChipButton removeBlackButton;
     RemoveChipButton removeWhiteButton;
+
+    CurrentPlayer currentPlayer;
 
     std::vector<int> availableMovements;
 

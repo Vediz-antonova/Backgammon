@@ -9,6 +9,7 @@
 
 #include <utility>
 #include "enums.h"
+#include "sizes.h"
 
 class Cell : public QObject, public QGraphicsItem {
     Q_OBJECT

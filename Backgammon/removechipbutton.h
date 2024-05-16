@@ -6,6 +6,7 @@
 #include <QPainter>
 
 #include "enums.h"
+#include "sizes.h"
 
 class RemoveChipButton : public QObject, public QGraphicsItem
 {

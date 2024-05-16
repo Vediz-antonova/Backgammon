@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     cell.cpp \
+    currentplayer.cpp \
     dice.cpp \
     game.cpp \
     main.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
 HEADERS += \
     MainWidget.h \
     cell.h \
+    currentplayer.h \
     dice.h \
     enums.h \
     game.h \

@@ -1,5 +1,4 @@
 #include "dice.h"
-#include "sizes.h"
 
 Dice::Dice(QObject *parent) : QObject(parent), QGraphicsItem()
 {

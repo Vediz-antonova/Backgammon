@@ -1,5 +1,4 @@
 #include "cell.h"
-#include "sizes.h"
 
 Cell::Cell() {
     chipsColor = none;

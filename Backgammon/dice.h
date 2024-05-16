@@ -9,6 +9,8 @@
 #include <QRandomGenerator>
 #include <QGraphicsSceneMouseEvent>
 
+#include "sizes.h"
+
 class Dice : public QObject, public QGraphicsItem{
     Q_OBJECT
 
