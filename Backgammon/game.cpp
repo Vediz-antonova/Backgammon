@@ -63,15 +63,15 @@ void Game::startNewGame() {
     int num_chips = 15;
 
     for (int i = 0; i < num_chips; i++) {
-        board[6].addChip(black);
+        board[12].addChip(black);
     }
 
     for (int i = 0; i < num_chips; i++) {
-        board[18].addChip(white);
+        board[0].addChip(white);
     }
 }
 
-void Game::endGame() {
+bool Game::endGame() {
     if (removed_black_chips == 15 || removed_white_chips == 15){
         QMessageBox message;
         if(removed_black_chips == 15){
@@ -82,8 +82,10 @@ void Game::endGame() {
 
         message.exec();
 
-        scene->clear();
+        return true;
     }
+
+    return false;
 }
 
 void Game::cellClicked(int id) {
@@ -111,7 +113,6 @@ void Game::diceClicked() {
     Game *game = &Game::getInstance();
 
     game->rollDices();
-    game->endOfMovements();
 }
 
 void Game::removeButtonClicked(int move){
@@ -140,6 +141,8 @@ void Game::rollDices() {
 
     dice1.setEnabled(false);
     dice2.setEnabled(false);
+
+    endOfMovements();
 }
 
 int Game::rollDice(Dice &dice) {
@@ -300,6 +303,10 @@ MoveType Game::getMoveType(Cell &from, int move) {
         return moveForbidden;
     }
 
+    if(isCellHead(from) && fromHead){
+        return moveForbidden;
+    }
+
     return regularMove;
 }
 
@@ -360,6 +367,13 @@ void Game::endOfMovements(){
         playerColor = playerColor == white ? black : white;
         currentPlayer.setColor(playerColor);
         fromHead = false;
+
+        if(playerColor == black){
+            // rollDices();
+            // while(playerColor == black && !availableMovements.empty() ){
+                // aiMove();
+            // }
+        }
     }
 }
 
@@ -372,4 +386,91 @@ bool Game::isCellHead(Cell &cell){
     }
 
     return false;
+}
+
+// void Game::aiMove() {
+//     if (availableMovements.empty()) {
+//         endOfMovements();
+//         return;
+//     }
+
+//     std::vector<Cell*> aiCells;
+//     for (Cell &cell : board) {
+//         if (cell.getChipsColor() == black && cell.getChipsCount() > 0) {
+//             aiCells.push_back(&cell);
+//         }
+//     }
+//     if (aiCells.empty()) {
+//         return;
+//     }
+
+//     Cell &fromCell = *aiCells[QRandomGenerator::global()->bounded(static_cast<int>(aiCells.size()))];
+
+//     int move = availableMovements.empty() ? 0 : availableMovements[QRandomGenerator::global()->bounded(static_cast<int>(availableMovements.size()))];
+
+//     int toCellId = getCellIdAfterMove(fromCell, move);
+
+//     if (getMoveType(fromCell, move) == regularMove) {
+//         tryMakeMove(fromCell, board[toCellId]);
+//         return;
+//     } else if (getMoveType(fromCell, move) == removeFromBoard){
+//         removeChipFromBoard(fromCell, move);
+//         return;
+//     }
+// }
+
+int Game::evaluate() {
+    int score = 0;
+    score += 10 * (15 - removed_black_chips);
+    score -= 10 * (15 - removed_white_chips);
+    for(Cell &cell : board){
+        int distance;
+        if(cell.getChipsColor() == black){
+            distance = cell.getId() - 6;
+            if (distance > 0){
+                score -= distance;
+            }
+        } else {
+            distance = 18 - cell.getId();
+            if (distance > 0){
+                score += distance;
+            }
+        }
+    }
+
+    return score;
+}
+
+int Game::minimax(int depth, bool isMaximizingPlayer) {
+    if (depth == 0 || endGame()) {
+        return evaluate();
+    }
+
+    if (isMaximizingPlayer) {
+        int maxEval = INT_MIN;
+        for (Cell &cell : board) {
+            if (cell.getChipsColor() == black) {
+                for (int move : availableMovements) {
+                    if (validateMovement(move)) {
+
+
+                    }
+                }
+            }
+        }
+        return maxEval;
+    } else {
+        int minEval = INT_MAX;
+        for (Cell &cell : board) {
+            if (cell.getChipsColor() != black) {
+                for (int move : availableMovements) {
+                    if (validateMovement(move)) {
+
+
+                    }
+                }
+            }
+        }
+        return minEval;
+    }
 }

@@ -11,7 +11,8 @@
 
 #include "sizes.h"
 
-class Dice : public QObject, public QGraphicsItem{
+class Dice : public QObject, public QGraphicsItem
+{
     Q_OBJECT
 
 public:

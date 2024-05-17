@@ -10,6 +10,12 @@ MainWidget::MainWidget(QWidget *parent)
 
     scene = new QGraphicsScene();
 
+    // rulesScreen = new RulesScreen();
+    // scene->addItem(rulesScreen);
+    // rulesScreen->show();
+
+    // ui->graphicsView->hide();
+
     QPixmap pixBoard("/home/vediz/OAiP/pictures/background.png");
     pixBoard = pixBoard.scaled(this->size(), Qt::KeepAspectRatioByExpanding);
     QGraphicsPixmapItem *item = new QGraphicsPixmapItem(pixBoard);
@@ -23,13 +29,10 @@ MainWidget::MainWidget(QWidget *parent)
     game = &Game::getInstance();
     Game::getInstance().setScene(scene);
     Game::getInstance().startNewGame();
-
-    timer = new QTimer();
-    timer->start(1000 / 50);
 }
 
 MainWidget::~MainWidget()
 {
     delete ui;
-    delete timer;
 }
+

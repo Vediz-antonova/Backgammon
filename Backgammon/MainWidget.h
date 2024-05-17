@@ -8,8 +8,10 @@
 #include <QGraphicsView>
 #include <QGraphicsPixmapItem>
 #include <QMouseEvent>
+#include <QResizeEvent>
 
 #include "game.h"
+#include "rulesscreen.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -25,13 +27,11 @@ public:
     explicit MainWidget(QWidget *parent = 0);
     ~MainWidget();
 
-private slots:
-
 private:
     Ui::MainWidget *ui;
     QGraphicsScene *scene;
     Game *game;
-    QTimer *timer;
+    RulesScreen *rulesScreen;
 };
 
 #endif // MAINWIDGET_H

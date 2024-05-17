@@ -24,7 +24,7 @@ public:
 
     void setScene(QGraphicsScene* new_sc) { scene = new_sc; }
     void startNewGame();
-    void endGame();
+    bool endGame();
 
 private:
     QGraphicsScene* scene;
@@ -69,6 +69,10 @@ private:
     void removeChipFromBoard(Cell &cell, int move);
     void endOfMovements();
     bool isCellHead(Cell &cell);
+
+    int evaluate();
+    int minimax(int depth, bool isMaximizingPlayer);
+    void aiMove();
 };
 
 

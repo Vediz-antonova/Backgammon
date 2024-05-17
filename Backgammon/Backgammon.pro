@@ -15,7 +15,8 @@ SOURCES += \
     game.cpp \
     main.cpp \
     MainWidget.cpp \
-    removechipbutton.cpp
+    removechipbutton.cpp \
+    rulesscreen.cpp
 
 HEADERS += \
     MainWidget.h \
@@ -25,6 +26,7 @@ HEADERS += \
     enums.h \
     game.h \
     removechipbutton.h \
+    rulesscreen.h \
     sizes.h
 
 FORMS += \
