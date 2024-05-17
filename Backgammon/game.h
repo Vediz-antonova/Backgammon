@@ -56,23 +56,20 @@ private:
 
     void rollDices();
     int rollDice(Dice &dice);
-    void tryMakeMove(Cell &from, Cell &to);
+    bool tryMakeMove(Cell &from, Cell &to);//
     void selectCell(Cell &cell);
     void unselectCell();
-    std::vector<int> getDicesMovements();
-    bool validateMovement(int movement);
+    std::vector<int> getDicesMovements(); //
+    bool validateMovement(int movement); //
     void clearMovementsMarks();
     int getCellsDistance(Cell &from, Cell &to);
-    MoveType getMoveType(Cell &from, int move);
+    MoveType getMoveType(Cell &from, int move);//
     int getCellIdAfterMove(Cell &from, int move);
     bool chipsRemoveAvailable();
     void removeChipFromBoard(Cell &cell, int move);
     void endOfMovements();
     bool isCellHead(Cell &cell);
-
-    int evaluate();
-    int minimax(int depth, bool isMaximizingPlayer);
-    void aiMove();
+    void aiMove(); //
 };
 
 

@@ -151,21 +151,21 @@ int Game::rollDice(Dice &dice) {
     return diceValue;
 }
 
-void Game::tryMakeMove(Cell &from, Cell &to)
+bool Game::tryMakeMove(Cell &from, Cell &to)
 {
     if (to.getId() == from.getId()) {
-        return;
+        return false;
     }
 
     if (!to.getAvailableToMove()) {
-        return;
+        return false;
     }
 
     ChipColor chipColor= from.getChipsColor();
     bool removed = from.removeChip();
 
     if (!removed) {
-        return;
+        return false;;
     }
 
     if(isCellHead(from)){
@@ -183,6 +183,8 @@ void Game::tryMakeMove(Cell &from, Cell &to)
     }
 
     endOfMovements();
+
+    return true;
 }
 
 void Game::selectCell(Cell &cell) {
@@ -360,7 +362,7 @@ void Game::endOfMovements(){
         }
     }
 
-    if(availableMovements.empty() || no_movements){
+    if(no_movements){
         dice1.setEnabled(true);
         dice2.setEnabled(true);
 
@@ -369,10 +371,10 @@ void Game::endOfMovements(){
         fromHead = false;
 
         if(playerColor == black){
-            // rollDices();
-            // while(playerColor == black && !availableMovements.empty() ){
-                // aiMove();
-            // }
+            rollDices();
+            while(playerColor == black && !availableMovements.empty() ){
+                aiMove();
+            }
         }
     }
 }
@@ -388,89 +390,39 @@ bool Game::isCellHead(Cell &cell){
     return false;
 }
 
-// void Game::aiMove() {
-//     if (availableMovements.empty()) {
-//         endOfMovements();
-//         return;
-//     }
-
-//     std::vector<Cell*> aiCells;
-//     for (Cell &cell : board) {
-//         if (cell.getChipsColor() == black && cell.getChipsCount() > 0) {
-//             aiCells.push_back(&cell);
-//         }
-//     }
-//     if (aiCells.empty()) {
-//         return;
-//     }
-
-//     Cell &fromCell = *aiCells[QRandomGenerator::global()->bounded(static_cast<int>(aiCells.size()))];
-
-//     int move = availableMovements.empty() ? 0 : availableMovements[QRandomGenerator::global()->bounded(static_cast<int>(availableMovements.size()))];
-
-//     int toCellId = getCellIdAfterMove(fromCell, move);
-
-//     if (getMoveType(fromCell, move) == regularMove) {
-//         tryMakeMove(fromCell, board[toCellId]);
-//         return;
-//     } else if (getMoveType(fromCell, move) == removeFromBoard){
-//         removeChipFromBoard(fromCell, move);
-//         return;
-//     }
-// }
-
-int Game::evaluate() {
-    int score = 0;
-    score += 10 * (15 - removed_black_chips);
-    score -= 10 * (15 - removed_white_chips);
-    for(Cell &cell : board){
-        int distance;
-        if(cell.getChipsColor() == black){
-            distance = cell.getId() - 6;
-            if (distance > 0){
-                score -= distance;
-            }
-        } else {
-            distance = 18 - cell.getId();
-            if (distance > 0){
-                score += distance;
-            }
-        }
+void Game::aiMove() {
+    if (availableMovements.empty()) {
+        endOfMovements();
+        return;
     }
 
-    return score;
-}
-
-int Game::minimax(int depth, bool isMaximizingPlayer) {
-    if (depth == 0 || endGame()) {
-        return evaluate();
+    std::vector<Cell*> aiCells;
+    for (Cell &cell : board) {
+        if (cell.getChipsColor() == black && cell.getChipsCount() > 0) {
+            aiCells.push_back(&cell);
+        }
+    }
+    if (aiCells.empty()) {
+        return;
     }
 
-    if (isMaximizingPlayer) {
-        int maxEval = INT_MIN;
-        for (Cell &cell : board) {
-            if (cell.getChipsColor() == black) {
-                for (int move : availableMovements) {
-                    if (validateMovement(move)) {
+    while(!availableMovements.empty()){
+        Cell &fromCell = *aiCells[QRandomGenerator::global()->bounded(static_cast<int>(aiCells.size()))];
 
-
-                    }
+        for(int move : availableMovements){
+            MoveType moveType = getMoveType(fromCell, move);
+            if (moveType == regularMove) {
+                int toCellId =  getCellIdAfterMove(fromCell, move);
+                selectCell(fromCell);
+                if(tryMakeMove(fromCell, board[toCellId])){
+                    return;
                 }
+                unselectCell();
+            } else if(chipsRemoveAvailable() && moveType == removeFromBoard){
+                selectCell(fromCell);
+                removeChipFromBoard(fromCell, move);
+                return;
             }
         }
-        return maxEval;
-    } else {
-        int minEval = INT_MAX;
-        for (Cell &cell : board) {
-            if (cell.getChipsColor() != black) {
-                for (int move : availableMovements) {
-                    if (validateMovement(move)) {
-
-
-                    }
-                }
-            }
-        }
-        return minEval;
     }
 }
