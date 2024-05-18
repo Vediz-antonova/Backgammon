@@ -16,7 +16,8 @@ SOURCES += \
     main.cpp \
     MainWidget.cpp \
     removechipbutton.cpp \
-    rulesscreen.cpp
+    rulesscreen.cpp \
+    startwidget.cpp
 
 HEADERS += \
     MainWidget.h \
@@ -27,10 +28,12 @@ HEADERS += \
     game.h \
     removechipbutton.h \
     rulesscreen.h \
-    sizes.h
+    sizes.h \
+    startwidget.h
 
 FORMS += \
-    MainWidget.ui
+    MainWidget.ui \
+    startwidget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

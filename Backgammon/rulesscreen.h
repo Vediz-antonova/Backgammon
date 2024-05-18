@@ -1,18 +1,16 @@
 #ifndef RULESSCREEN_H
 #define RULESSCREEN_H
 
-#include <QGraphicsWidget>
+#include <QWidget>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QTextEdit>
 #include <QPushButton>
-#include <QGraphicsProxyWidget>
+#include <QPalette>
 
-class RulesScreen : public QGraphicsWidget
-{
-    Q_OBJECT
-
+class RulesScreen : public QWidget {
 public:
-    RulesScreen(QGraphicsItem *parent = 0);
+    RulesScreen(QWidget *parent = 0);
 };
 
 #endif // RULESSCREEN_H

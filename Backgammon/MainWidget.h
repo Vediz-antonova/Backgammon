@@ -31,7 +31,6 @@ private:
     Ui::MainWidget *ui;
     QGraphicsScene *scene;
     Game *game;
-    RulesScreen *rulesScreen;
 };
 
 #endif // MAINWIDGET_H
