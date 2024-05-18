@@ -27,6 +27,8 @@ public:
     explicit MainWidget(QWidget *parent = 0);
     ~MainWidget();
 
+    void setTwoPlayers(bool value);
+
 private:
     Ui::MainWidget *ui;
     QGraphicsScene *scene;

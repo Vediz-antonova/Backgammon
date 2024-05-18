@@ -30,3 +30,6 @@ MainWidget::~MainWidget()
     delete ui;
 }
 
+void MainWidget::setTwoPlayers(bool value){
+    Game::getInstance().setTwoPlayers(value);
+}

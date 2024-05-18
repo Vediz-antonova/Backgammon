@@ -23,6 +23,8 @@ private slots:
 
     void on_startButton_clicked();
 
+    void on_start2playerButton_clicked();
+
 private:
     Ui::StartWidget *ui;
     RulesScreen *rulesScreen;

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>568</width>
-    <height>283</height>
+    <height>326</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,20 +38,20 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>140</y>
+     <y>130</y>
      <width>231</width>
      <height>25</height>
     </rect>
    </property>
    <property name="text">
-    <string>START</string>
+    <string>START GAME WITH BOT</string>
    </property>
   </widget>
   <widget class="QPushButton" name="rulesButton">
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>180</y>
+     <y>210</y>
      <width>231</width>
      <height>25</height>
     </rect>
@@ -64,13 +64,26 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>220</y>
+     <y>250</y>
      <width>231</width>
      <height>25</height>
     </rect>
    </property>
    <property name="text">
     <string>EXIT</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="start2playerButton">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>170</y>
+     <width>231</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>START 2 PLAYERS GAME</string>
    </property>
   </widget>
  </widget>

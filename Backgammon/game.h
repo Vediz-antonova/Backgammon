@@ -25,9 +25,12 @@ public:
     void setScene(QGraphicsScene* new_sc) { scene = new_sc; }
     void startNewGame();
     bool endGame();
+    void setTwoPlayers(bool value);
 
 private:
     QGraphicsScene* scene;
+
+    bool twoPlayer;
 
     Cell board[24];
 
@@ -47,6 +50,7 @@ private:
     Cell *selectedCell;
 
     ChipColor playerColor = white;
+    ChipColor aiColor = black;
 
     bool fromHead = false;
 
@@ -56,20 +60,20 @@ private:
 
     void rollDices();
     int rollDice(Dice &dice);
-    bool tryMakeMove(Cell &from, Cell &to);//
+    bool tryMakeMove(Cell &from, Cell &to);
     void selectCell(Cell &cell);
     void unselectCell();
-    std::vector<int> getDicesMovements(); //
-    bool validateMovement(int movement); //
+    std::vector<int> getDicesMovements();
+    bool validateMovement(int movement);
     void clearMovementsMarks();
     int getCellsDistance(Cell &from, Cell &to);
-    MoveType getMoveType(Cell &from, int move);//
+    MoveType getMoveType(Cell &from, int move);
     int getCellIdAfterMove(Cell &from, int move);
     bool chipsRemoveAvailable();
     void removeChipFromBoard(Cell &cell, int move);
     void endOfMovements();
     bool isCellHead(Cell &cell);
-    void aiMove(); //
+    void aiMove();
 };
 
 

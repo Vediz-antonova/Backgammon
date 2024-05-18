@@ -88,6 +88,10 @@ bool Game::endGame() {
     return false;
 }
 
+void Game::setTwoPlayers(bool value){
+    twoPlayer = value;
+}
+
 void Game::cellClicked(int id) {
     Game *game = &Game::getInstance();
     Cell &cell = game->board[id];
@@ -370,14 +374,15 @@ void Game::endOfMovements(){
         currentPlayer.setColor(playerColor);
         fromHead = false;
 
-        if(playerColor == black){
+        if(playerColor == aiColor && !twoPlayer){
             rollDices();
-            while(playerColor == black && !availableMovements.empty() ){
+            while(!availableMovements.empty()){
                 aiMove();
             }
         }
     }
 }
+
 
 bool Game::isCellHead(Cell &cell){
     ChipColor color = cell.getChipsColor();
@@ -398,7 +403,7 @@ void Game::aiMove() {
 
     std::vector<Cell*> aiCells;
     for (Cell &cell : board) {
-        if (cell.getChipsColor() == black && cell.getChipsCount() > 0) {
+        if (cell.getChipsColor() == aiColor && cell.getChipsCount() > 0) {
             aiCells.push_back(&cell);
         }
     }

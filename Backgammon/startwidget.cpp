@@ -23,6 +23,14 @@ void StartWidget::on_rulesButton_clicked()
 
 void StartWidget::on_startButton_clicked()
 {
+    mainWidget->setTwoPlayers(false);
+    mainWidget->showMaximized();
+    this->hide();
+}
+
+void StartWidget::on_start2playerButton_clicked()
+{
+    mainWidget->setTwoPlayers(true);
     mainWidget->showMaximized();
     this->hide();
 }
